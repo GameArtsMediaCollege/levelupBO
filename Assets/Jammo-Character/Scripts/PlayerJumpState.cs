@@ -10,10 +10,13 @@ public class PlayerJumpState : PlayerBaseState
     IEnumerator IJumpRoutine()
     {
         yield return new WaitForSeconds(0.5f);
-        ctx.JumpCount = 0;
+        Ctx.JumpCount = 0;
     }
     public PlayerJumpState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory)
-        : base(currentContext, playerStateFactory) { }
+        : base(currentContext, playerStateFactory) {
+        InitializeSubState();
+        IsRootState = true;
+    }
     public override void EnterState()
     {
         Debug.Log("entered the jumpstate");
@@ -23,61 +26,75 @@ public class PlayerJumpState : PlayerBaseState
     public override void UpdateState()
     {
         CheckSwitchStates();
+        HandleGravity();
     }
     public override void ExitState()
     {
-        ctx.Animator.SetBool(ctx.IsJumpingHash, false);
-        ctx.IsJumpingAnimating = false;
-        ctx.CurrentJumpResetRoutine = ctx.StartCoroutine(IJumpRoutine());
-        if (ctx.JumpCount == 3)
+        Ctx.Animator.SetBool(Ctx.IsJumpingHash, false);
+        if (Ctx.IsJumpPressed)
         {
-            ctx.JumpCount = 0;
-            ctx.Animator.SetInteger(ctx.JumpCountHash, ctx.JumpCount);
+            Ctx.RequireNewJumpPress = true;
+        }
+        Ctx.CurrentJumpResetRoutine = Ctx.StartCoroutine(IJumpRoutine());
+        if (Ctx.JumpCount == 3)
+        {
+            Ctx.JumpCount = 0;
+            Ctx.Animator.SetInteger(Ctx.JumpCountHash, Ctx.JumpCount);
         }
     }
     public override void CheckSwitchStates()
     {
-        if (ctx.CharacterController.isGrounded)
+        if (Ctx.CharacterController.isGrounded)
         {
-            SwitchState(factory.Grounded());
+            SwitchState(Factory.Grounded());
         }
     }
     public override void InitializeSubState()
     {
-
+        if (!Ctx.IsMovementPressed && !Ctx.IsRunPressed)
+        {
+            SetSubState(Factory.Idle());
+        }
+        else if (Ctx.IsMovementPressed && !Ctx.IsRunPressed)
+        {
+            SetSubState(Factory.Walk());
+        }
+        else
+        {
+            SetSubState(Factory.Run());
+        }
     }
 
     void HandleJump()
     {
-        if (ctx.JumpCount < 3 && ctx.CurrentJumpResetRoutine != null)
+        if (Ctx.JumpCount < 3 && Ctx.CurrentJumpResetRoutine != null)
         {
-            ctx.StopCoroutine(ctx.CurrentJumpResetRoutine);
+            Ctx.StopCoroutine(Ctx.CurrentJumpResetRoutine);
         }
-        ctx.Animator.SetBool(ctx.IsJumpingHash, true);
-        ctx.IsJumpingAnimating = true;
-        ctx.IsJumping = true;
-        ctx.JumpCount += 1;
-        ctx.Animator.SetInteger(ctx.JumpCountHash, ctx.JumpCount);
-        ctx.CurrentMovementY = ctx.InitialJumpVelocities[ctx.JumpCount];
-        ctx.AppliedMovementY = ctx.InitialJumpVelocities[ctx.JumpCount];
+        Ctx.Animator.SetBool(Ctx.IsJumpingHash, true);
+        Ctx.IsJumping = true;
+        Ctx.JumpCount += 1;
+        Ctx.Animator.SetInteger(Ctx.JumpCountHash, Ctx.JumpCount);
+        Ctx.CurrentMovementY = Ctx.InitialJumpVelocities[Ctx.JumpCount];
+        Ctx.AppliedMovementY = Ctx.InitialJumpVelocities[Ctx.JumpCount];
     }
 
     void HandleGravity()
     {
-        bool isfalling = ctx.CurrentMovementY <= 0.0f || !ctx.IsJumpPressed;
+        bool isfalling = Ctx.CurrentMovementY <= 0.0f || !Ctx.IsJumpPressed;
         float fallMultiplier = 2.0f;
 
         if (isfalling)
         {
-            float previousYVelocity = ctx.CurrentMovementY;
-            ctx.CurrentMovementY = ctx.CurrentMovementY + (ctx.JumpGravities[ctx.JumpCount] * fallMultiplier * Time.deltaTime);
-            ctx.AppliedMovementY = Mathf.Max((previousYVelocity + ctx.CurrentMovementY) * 0.5f, -20.0f);
+            float previousYVelocity = Ctx.CurrentMovementY;
+            Ctx.CurrentMovementY = Ctx.CurrentMovementY + (Ctx.JumpGravities[Ctx.JumpCount] * fallMultiplier * Time.deltaTime);
+            Ctx.AppliedMovementY = Mathf.Max((previousYVelocity + Ctx.CurrentMovementY) * 0.5f, -20.0f);
         }
         else
         {
-            float previousYVelocity = ctx.CurrentMovementY;
-            ctx.CurrentMovementY = ctx.CurrentMovementY + (ctx.JumpGravities[ctx.JumpCount] * Time.deltaTime);
-            ctx.AppliedMovementY = (previousYVelocity + ctx.CurrentMovementY) * 0.5f;
+            float previousYVelocity = Ctx.CurrentMovementY;
+            Ctx.CurrentMovementY = Ctx.CurrentMovementY + (Ctx.JumpGravities[Ctx.JumpCount] * Time.deltaTime);
+            Ctx.AppliedMovementY = (previousYVelocity + Ctx.CurrentMovementY) * 0.5f;
         }
     }
 

@@ -8,8 +8,16 @@ using System;
 
 public abstract class PlayerBaseState
 {
-    protected PlayerStateMachine ctx;
-    protected PlayerStateFactory factory;
+    private bool isRootState = false;
+    private PlayerStateMachine ctx;
+    private PlayerStateFactory factory;
+    private PlayerBaseState currentSubstate;
+    private PlayerBaseState currentSuperState;
+
+    protected bool IsRootState {  set { isRootState = value; } }
+    protected PlayerStateMachine Ctx {  get { return ctx; } }
+    protected PlayerStateFactory Factory { get { return factory; } }
+
     public PlayerBaseState(PlayerStateMachine currentContext, PlayerStateFactory playerstateFactory)
     {
         ctx = currentContext;
@@ -25,9 +33,22 @@ public abstract class PlayerBaseState
 
     public abstract void InitializeSubState();
 
-    void UpdateStates()
+    public void UpdateStates()
     {
+        UpdateState();
+        if(currentSubstate != null)
+        {
+            currentSubstate.UpdateStates();
+        }
+    }
 
+    public void ExitStates()
+    {
+        ExitState();
+        if(currentSubstate != null)
+        {
+            currentSubstate.ExitStates();
+        }
     }
 
     protected void SwitchState(PlayerBaseState newState)
@@ -36,19 +57,26 @@ public abstract class PlayerBaseState
         ExitState();
         //new state enters state
         newState.EnterState();
-
-        //switch currentstate of context
-        ctx.CurrentState = newState;
+        if (isRootState)
+        {
+            //switch currentstate of context
+            ctx.CurrentState = newState;
+        }
+        else if(currentSuperState != null)
+        {
+            currentSuperState.SetSubState(newState);
+        }
     }
 
-    protected void SetSuperState()
+    protected void SetSuperState(PlayerBaseState newSuperState)
     {
-
+        currentSuperState = newSuperState;
     }
 
-    protected void SetSubState()
+    protected void SetSubState(PlayerBaseState newSubstate)
     {
-
+        currentSubstate = newSubstate;
+        newSubstate.SetSuperState(this);
     }
 
 }

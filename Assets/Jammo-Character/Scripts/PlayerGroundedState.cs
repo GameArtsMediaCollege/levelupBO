@@ -3,12 +3,15 @@ using UnityEngine;
 public class PlayerGroundedState : PlayerBaseState
 {
     public PlayerGroundedState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory)
-    : base(currentContext, playerStateFactory){ }
+    : base(currentContext, playerStateFactory){
+        IsRootState = true;
+        InitializeSubState();
+    }
     public override void EnterState()
     {
         Debug.Log("we entered the grounded state");
-        ctx.CurrentMovementY = ctx.GroundedGravity;
-        ctx.AppliedMovementY = ctx.GroundedGravity; 
+        Ctx.CurrentMovementY = Ctx.GroundedGravity;
+        Ctx.AppliedMovementY = Ctx.GroundedGravity; 
     }
     public override void UpdateState()
     {
@@ -21,13 +24,28 @@ public class PlayerGroundedState : PlayerBaseState
     public override void CheckSwitchStates()
     {
         //jump when button is pressed
-        if (ctx.IsJumpPressed)
+        if (Ctx.IsJumpPressed && !Ctx.RequireNewJumpPress)
         {
-            SwitchState(factory.Jump());
+            SwitchState(Factory.Jump());
+        }
+        else if (!Ctx.CharacterController.isGrounded)
+        {
+            SwitchState(Factory.Fall());
         }
     }
     public override void InitializeSubState()
     {
-
+        if(!Ctx.IsMovementPressed && !Ctx.IsRunPressed)
+        {
+            SetSubState(Factory.Idle());
+        }
+        else if (Ctx.IsMovementPressed && !Ctx.IsRunPressed)
+        {
+            SetSubState(Factory.Walk());
+        }
+        else
+        {
+            SetSubState(Factory.Run());
+        }
     }
 }
