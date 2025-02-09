@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class PlayerRunState : PlayerBaseState
 {
+    public PlayerRunState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory)
+        : base(currentContext, playerStateFactory) { }
     public override void EnterState()
     {
 
@@ -9,7 +11,7 @@ public class PlayerRunState : PlayerBaseState
 
     public override void UpdateState()
     {
-
+        CheckSwitchStates();
     }
     public override void ExitState()
     {

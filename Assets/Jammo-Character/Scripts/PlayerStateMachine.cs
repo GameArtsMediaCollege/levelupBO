@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
+using System;
 using UnityEngine.InputSystem;
 
 public class PlayerStateMachine : MonoBehaviour
@@ -39,13 +41,31 @@ public class PlayerStateMachine : MonoBehaviour
     bool isJumpAnimating = false;
     int jumpCount = 0;
     int jumpCountHash;
+
     Dictionary<int, float> initialJumpVelocities = new Dictionary<int, float>();
     Dictionary<int, float> JumpGravities = new Dictionary<int, float>();
+
     Coroutine currentJumpResetRoutine = null;
 
     //state variables
     PlayerBaseState currentState;
     PlayerStateFactory states;
+
+    //getters and setters
+    public CharacterController CharacterController { get {  return charactercontroller; } }
+    public PlayerBaseState CurrentState { get { return currentState; } set { currentState = value; } }
+    public Animator Animator { get { return animator; } }
+    public Coroutine CurrentJumpResetRoutine { get { return currentJumpResetRoutine; } set { currentJumpResetRoutine = value; } }
+    public Dictionary<int, float> InitialJumpVelocities { get { return initialJumpVelocities; } }
+    public int JumpCount { get { return jumpCount; } set { JumpCount = value; } }
+    public int IsJumpingHash { get { return isJumpingHash; } }
+    public int JumpCountHash {  get { return jumpCountHash; } }
+    public bool IsJumpingAnimating {  set {  isJumpAnimating = value; } }
+    public bool IsJumping { set { isJumping = value; } } 
+    public bool IsJumpPressed { get { return  isJumpPressed; } }
+    public float GroundedGravity { get { return groundedgravity; } }
+    public float CurrentMovementY {  get { return currentMovement.y;  } set { currentMovement.y = value; } }
+    public float AppliedMovementY { get { return appliedMovement.y; } set { appliedMovement.y = value; } }
 
     private void Awake()
     {
@@ -101,13 +121,13 @@ public class PlayerStateMachine : MonoBehaviour
     void Update()
     {
         handleRotation();
+        CurrentState.UpdateState();
         charactercontroller.Move(appliedMovement * Time.deltaTime);
     }
 
     void OnJump(InputAction.CallbackContext context)
     {
         isJumpPressed = context.ReadValueAsButton();
-        Debug.Log(isJumpPressed);
     }
 
     void OnRun(InputAction.CallbackContext context)
