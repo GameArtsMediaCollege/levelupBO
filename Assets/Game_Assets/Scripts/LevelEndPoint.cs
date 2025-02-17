@@ -20,6 +20,10 @@ public class LevelEndPoint : MonoBehaviour
         {
             Debug.Log("geen particles voor het eindpunt gevonden");
         }
+        else
+        {
+            particles.Stop();
+        }
     }
 
     // Update is called once per frame
