@@ -8,7 +8,7 @@ public class PlayerStateMachine : MonoBehaviour
 {
     JammoInput playerinput;
     CharacterController charactercontroller;
-    public Animator animator;
+    private Animator animator;
 
     int isWalkingHash;
     int isRunningHash;
@@ -27,10 +27,12 @@ public class PlayerStateMachine : MonoBehaviour
 
     // constants
     float rotationFactorPerFrame = 15f;
+    [Header("beweging")]
     [Range(1.0f, 10.0f)]
     [SerializeField] private float walkMultiplier = 3.0f;
     [Range(1.0f, 10.0f)]
     [SerializeField] private float runMultiplier = 5.0f;
+    [Header("sprong")]
     [Range(1f, 4f)]
     [SerializeField] private float fallMultiplier = 2.0f;
     //gravity
@@ -40,7 +42,7 @@ public class PlayerStateMachine : MonoBehaviour
     //jump variables
     bool isJumpedPressed = false;
     float initialJumpVelocity;
-    [Range(5.0f, 25.0f)]
+    [Range(1.0f, 25.0f)]
     [SerializeField] float maxJumpHeight = 10f;
 
     [Range(0.25f, 5f)]
@@ -92,6 +94,7 @@ public class PlayerStateMachine : MonoBehaviour
 
     private void Awake()
     {
+        animator = GetComponentInChildren<Animator>();
         playerinput = new JammoInput();
         charactercontroller = GetComponent<CharacterController>();
 

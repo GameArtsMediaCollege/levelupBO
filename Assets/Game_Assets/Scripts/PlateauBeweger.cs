@@ -14,26 +14,31 @@ public class PlateauBeweger : MonoBehaviour
     private bool switching;
     private Vector3 target;
 
+    private void Start()
+    {
+        position1 = transform.position;
+    }
+
     void FixedUpdate()
     {
         if(switching == false)
         {
-            target = transform.position + position1;
+            target = position1;
         }
         else if(switching == true)
         {
-            target = transform.position + position2;
+            target = position2;
         }
 
 
-        if(plateau.transform.position == transform.position + position1)
+        if(transform.position == position1)
         {
             switching = true;
         }
-        else if (plateau.transform.position == transform.position + position2)
+        else if (transform.position == position2)
         {
             switching = false;
         }
-        plateau.transform.position = Vector3.MoveTowards(plateau.transform.position, target, speed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime);
     }
 }

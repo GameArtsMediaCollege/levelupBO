@@ -10,7 +10,7 @@ using UnityEngine.InputSystem.XR;
 public class SleutelCollectible : MonoBehaviour
 {
     [HideInInspector]
-    public CollectorTrigger slotscript;
+    public SlotScript slotscript;
     private Collider col;
     private float smoothTime = 0.8f;
     private float distanceThreshold = 1;

@@ -10,7 +10,6 @@ using static UnityEngine.GraphicsBuffer;
 public class PointEditor : Editor
 {
     PlateauBeweger plateau;
-    string text = "Nothing Opened...";
     bool clicked;
 
     private void OnSceneGUI()
@@ -21,8 +20,9 @@ public class PointEditor : Editor
 
 
         Quaternion handleRotation = handletransform.rotation;
-        Vector3 p0 = handletransform.TransformPoint(plateau.position1);
-        Vector3 p1 = handletransform.TransformPoint(plateau.position2);
+        Vector3 p0 = handletransform.position;
+        //Vector3 p1 = handletransform.TransformPoint(plateau.position2);
+        Vector3 p1 = plateau.position2;
 
         Handles.color = Color.white;
         Handles.DrawLine(p0, p1);
@@ -33,18 +33,8 @@ public class PointEditor : Editor
         {
             Undo.RecordObject(plateau, "Move Point");
             EditorUtility.SetDirty(plateau);
-            plateau.position2 = handletransform.InverseTransformPoint(p1);
-        }
-
-
-        
-        EditorGUI.BeginChangeCheck();
-        p0 = Handles.DoPositionHandle(p0, handleRotation);
-        if (EditorGUI.EndChangeCheck())
-        {
-            Undo.RecordObject(plateau, "Move Point");
-            EditorUtility.SetDirty(plateau);
-            plateau.position1 = handletransform.InverseTransformPoint(p0);
+            //plateau.position2 = handletransform.InverseTransformPoint(p1);
+            plateau.position2 = p1;
         }
 
         plateau.gameObject.transform.localScale = Vector3.one;

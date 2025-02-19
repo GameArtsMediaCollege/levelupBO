@@ -12,10 +12,9 @@ GameObject:
   - component: {fileID: 5657441557277096498}
   - component: {fileID: 7595235382729920248}
   - component: {fileID: 6797375618606579284}
-  - component: {fileID: 3373981122002667352}
   - component: {fileID: 4106529143968222122}
   m_Layer: 0
-  m_Name: key
+  m_Name: sleutel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -61,6 +60,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -107,27 +109,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.015195769
   m_Center: {x: 0.0010375403, y: -2.5455822e-18, z: 0.00035825875}
---- !u!95 &3373981122002667352
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8243643571995406125}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &4106529143968222122
 MonoBehaviour:
   m_ObjectHideFlags: 0

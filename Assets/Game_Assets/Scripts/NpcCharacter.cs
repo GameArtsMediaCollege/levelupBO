@@ -3,10 +3,7 @@ using UnityEngine;
 
 public class NpcCharacter : MonoBehaviour
 {
-    public Animator animator;
-    private float option;
     private IEnumerator routine;
-    private float idlechance;
 
 
     [HideInInspector]

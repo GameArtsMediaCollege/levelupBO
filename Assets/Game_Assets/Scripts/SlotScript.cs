@@ -4,14 +4,14 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 
-[RequireComponent(typeof(Animator))]
+
 [RequireComponent(typeof(Collider))]
-public class CollectorTrigger : MonoBehaviour
+public class SlotScript : MonoBehaviour
 {
     public bool BrengSleutelsNaarHetSlot;
     private bool readyforanimation;
 
-    private Animator animator;
+    Animator animator;
     private Collider col;
     public List<SleutelCollectible> sleutel_collectibles;
     private SleutelCollectible[] sleutel_collectibles_full;
@@ -27,7 +27,7 @@ public class CollectorTrigger : MonoBehaviour
         {
             Debug.LogError("zorg ervoor dat de collider van dit object wordt gebruikt als een trigger door op de knop 'isTrigger' te drukken");
         }
-        animator = this.GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>();
         if(animator == null)
         {
             Debug.LogError("je hebt een animator component nodig om dit slotscript te laten werken. je moet dit component op dit object toeveogen om te werken");
@@ -71,15 +71,20 @@ public class CollectorTrigger : MonoBehaviour
             readyforanimation = true;
             if (!BrengSleutelsNaarHetSlot)
             {
-                animator.enabled = true;
-                DestroyKeys();
-                Debug.Log("slot is geopend");
+                AllkeysCollected();
             }
         }
         else
         {
             Debug.Log("nog " + sleutel_collectibles.Count + " te verzamelen om het slot te openen");
         }
+    }
+
+    private void AllkeysCollected()
+    {
+        animator.enabled = true;
+        DestroyKeys();
+        Debug.Log("slot is geopend");
     }
 
     private void DestroyKeys()
@@ -96,10 +101,12 @@ public class CollectorTrigger : MonoBehaviour
         {
             if(other.tag == "Player")
             {
-                DestroyKeys();
-                animator.enabled = true;
-                Debug.Log("slot is geopend");
+                AllkeysCollected();
             }
+        }
+        else
+        {
+            Debug.Log("nog niet alle sleutels zijn verzameld");
         }
     }
 }
