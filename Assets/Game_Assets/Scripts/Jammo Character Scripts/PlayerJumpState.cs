@@ -1,8 +1,5 @@
 using UnityEngine;
-using System.Collections.Generic;
 using System.Collections;
-using System;
-
 
 public class PlayerJumpState : PlayerBaseState, iRootState
 {
@@ -19,6 +16,7 @@ public class PlayerJumpState : PlayerBaseState, iRootState
     public override void EnterState()
     {
         InitializeSubState();
+        setupJumpVariables();
         HandleJump();
     }
 
@@ -64,6 +62,26 @@ public class PlayerJumpState : PlayerBaseState, iRootState
         }
     }
 
+    void setupJumpVariables()
+    {
+        float timetoApex = Ctx.MaxJumpTie / 2;
+        float gravity = (-2 * Ctx.MaxJumpHeight) / Mathf.Pow(timetoApex, 2);
+        float initialJumpVelocity = (2 * Ctx.MaxJumpHeight) / timetoApex;
+        float secondJumpGravity = (-2 * (Ctx.MaxJumpHeight * 1.5f)) / Mathf.Pow((timetoApex * 1.25f), 2);
+        float secondJumpInitialVelocity = (2 * (Ctx.MaxJumpHeight * 1.5f)) / (timetoApex * 1.25f);
+        float thirdJumpGravity = (-2 * (Ctx.MaxJumpHeight * 2f)) / Mathf.Pow((timetoApex * 1.5f), 2);
+        float thirdJumpInitialVelocity = (2 * (Ctx.MaxJumpHeight * 2f)) / (timetoApex * 1.5f);
+
+        Ctx.InitialJumpVelocities[1] = initialJumpVelocity;
+        Ctx.InitialJumpVelocities[2] = secondJumpInitialVelocity;
+        Ctx.InitialJumpVelocities[3] = thirdJumpInitialVelocity;
+
+        Ctx.JumpGravities[0] = gravity;
+        Ctx.JumpGravities[1] = gravity;
+        Ctx.JumpGravities[2] = secondJumpGravity;
+        Ctx.JumpGravities[3] = thirdJumpGravity;
+    }
+
     void HandleJump()
     {
         if (Ctx.JumpCount < 3 && Ctx.CurrentJumpResetRoutine != null)
@@ -74,6 +92,7 @@ public class PlayerJumpState : PlayerBaseState, iRootState
         Ctx.IsJumping = true;
         Ctx.JumpCount += 1;
         Ctx.Animator.SetInteger(Ctx.JumpCountHash, Ctx.JumpCount);
+        //the actual jump
         Ctx.CurrentMovementY = Ctx.InitialJumpVelocities[Ctx.JumpCount];
         Ctx.AppliedMovementY = Ctx.InitialJumpVelocities[Ctx.JumpCount];
     }

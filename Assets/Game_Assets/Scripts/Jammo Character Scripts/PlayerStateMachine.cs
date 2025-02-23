@@ -33,7 +33,7 @@ public class PlayerStateMachine : MonoBehaviour
     [Range(1.0f, 10.0f)]
     [SerializeField] private float runMultiplier = 5.0f;
     [Header("sprong")]
-    [Range(1f, 4f)]
+    [Range(0f, 100f)]
     [SerializeField] private float fallMultiplier = 2.0f;
     //gravity
     float gravity = -9.8f;
@@ -79,6 +79,8 @@ public class PlayerStateMachine : MonoBehaviour
     public bool RequireNewJumpPress { get { return requirenewJumpPress; } set {  requirenewJumpPress = value; } }
     public bool IsJumping { set { isJumping = value; } } 
     public bool IsJumpPressed { get { return  isJumpPressed; } }
+    public float MaxJumpTie {  get { return maxJumpTime; } }
+    public float MaxJumpHeight {  get { return maxJumpHeight; } }
     public bool IsRunPressed { get { return isRunPressed; } }
     public bool IsMovementPressed {  get { return isMovementPressed; } }
     public float GroundedGravity { get { return groundedgravity; } }
