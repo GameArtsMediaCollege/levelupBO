@@ -15,10 +15,12 @@ public class PlayerWalkState : PlayerBaseState
         Ctx.AppliedMovementZ = Ctx.CurrentMovementInput.y * Ctx.WalkMultiplier;
         CheckSwitchStates();
     }
+
     public override void ExitState()
     {
 
     }
+
     public override void CheckSwitchStates()
     {
         if (!Ctx.IsMovementPressed)

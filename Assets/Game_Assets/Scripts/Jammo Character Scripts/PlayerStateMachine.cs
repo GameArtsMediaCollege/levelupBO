@@ -70,6 +70,8 @@ public class PlayerStateMachine : MonoBehaviour
     public Coroutine CurrentJumpResetRoutine { get { return currentJumpResetRoutine; } set { currentJumpResetRoutine = value; } }
     public Dictionary<int, float> InitialJumpVelocities { get { return initialJumpVelocities; } }
     public Dictionary<int, float> JumpGravities {  get { return jumpGravities;  } }
+
+    public Vector2 MovementInput { get { return currentmovementinput; } }
     public int JumpCount { get { return jumpCount; } set { jumpCount = value; } }
     public int IsWalkingHash { get { return isWalkingHash; } }
     public int IsRunningHash { get { return isRunningHash; } }
@@ -185,6 +187,7 @@ public class PlayerStateMachine : MonoBehaviour
     void OnMovementInput(InputAction.CallbackContext context)
     {
         currentmovementinput = context.ReadValue<Vector2>();
+
         currentMovement.x = currentmovementinput.x * walkMultiplier;
         currentMovement.z = currentmovementinput.y * walkMultiplier;
         currentRunMovement.x = currentmovementinput.x * runMultiplier;
