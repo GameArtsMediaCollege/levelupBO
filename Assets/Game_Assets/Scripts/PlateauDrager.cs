@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[RequireComponent(typeof(BoxCollider))]
 public class PlateauDrager : MonoBehaviour
 {
-    // Start is called before the first frame update
+    Collider collider;
     void Start()
     {
-        
+        collider = GetComponent<Collider>();
+        collider.isTrigger = true;
     }
 
     // Update is called once per frame

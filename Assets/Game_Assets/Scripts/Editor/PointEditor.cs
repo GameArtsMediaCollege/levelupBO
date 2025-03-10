@@ -21,7 +21,6 @@ public class PointEditor : Editor
 
         Quaternion handleRotation = handletransform.rotation;
         Vector3 p0 = handletransform.position;
-        //Vector3 p1 = handletransform.TransformPoint(plateau.position2);
         Vector3 p1 = plateau.position2;
 
         Handles.color = Color.white;
@@ -33,7 +32,6 @@ public class PointEditor : Editor
         {
             Undo.RecordObject(plateau, "Move Point");
             EditorUtility.SetDirty(plateau);
-            //plateau.position2 = handletransform.InverseTransformPoint(p1);
             plateau.position2 = p1;
         }
 
@@ -88,11 +86,13 @@ public class PointEditor : Editor
         
 
         EditorGUI.BeginChangeCheck();
-        float snelheidvar = EditorGUILayout.Slider("sprintsnelheid", plateau.speed, 1, 50);
+        float snelheidvar = EditorGUILayout.Slider("sprintsnelheid", plateau.timeToReach, 1, 50);
+        float pauzevar = EditorGUILayout.Slider("pauzetijd", plateau.hold, 0, 10);
         if (EditorGUI.EndChangeCheck())
         {
             Undo.RecordObject(target, "Changed Area Of Effect");
-            plateau.speed = snelheidvar;
+            plateau.timeToReach = snelheidvar;
+            plateau.hold = pauzevar;
         }
     }
 }

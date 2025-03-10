@@ -9,11 +9,12 @@ public class Deadzone : MonoBehaviour
 {
     public Vector3 spawnpointpos;
     public PlayerLifeSupport playerlife;
+    public PlayerLifeSupport[] playerlifes;
     private bool spawnpointavailable;
 
     private void Start()
     {
-        playerlife = FindObjectOfType<PlayerLifeSupport>();
+        playerlife = FindFirstObjectByType<PlayerLifeSupport>();
     }
 
     private bool CheckForSpawnPoints(PlayerLifeSupport lifesupport)
@@ -52,19 +53,5 @@ public class Deadzone : MonoBehaviour
             }
             other.GetComponent<CharacterController>().enabled = true;
         }
-    }
-
-    void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.green;
-        Gizmos.DrawSphere(spawnpointpos, 1f);
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(spawnpointpos, 1.1f);
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(transform.position, transform.localScale);
-
-        GUIStyle style = new GUIStyle();
-        style.normal.textColor = Color.green;
-       //Handles.Label(spawnpointpos + new Vector3(0, 1.5f, 0), "Spawn Punt", style);
     }
 }

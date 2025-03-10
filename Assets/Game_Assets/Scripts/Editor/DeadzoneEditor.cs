@@ -10,15 +10,12 @@ public class DeadzoneEditor : Editor
     private void OnSceneGUI()
     {
         Deadzone deadzone = target as Deadzone;
-        Transform handletransform = deadzone.transform;
 
         EditorGUI.BeginChangeCheck();
-        Vector3 handle = Handles.DoPositionHandle(deadzone.spawnpointpos, Quaternion.identity);
         if (EditorGUI.EndChangeCheck())
         {
             Undo.RecordObject(deadzone, "Move Point");
             EditorUtility.SetDirty(deadzone);
-            deadzone.spawnpointpos = handle;
         }
     }
 
