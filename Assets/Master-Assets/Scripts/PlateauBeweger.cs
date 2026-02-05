@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class PlateauBeweger : MonoBehaviour
 {
+    [SerializeField] private BoxCollider collider;
     [SerializeField] public Vector3 stablescale;
     [SerializeField] public Vector3 position1;
     [SerializeField] public Vector3 position2;
@@ -14,6 +15,17 @@ public class PlateauBeweger : MonoBehaviour
     private IEnumerator routine; 
     private bool switching;
     private Vector3 target;
+
+    private Rigidbody rb;
+    private float timer;
+    private bool toPos2 = true;
+    private float holdTimer;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+        rb.isKinematic = true;
+    }
 
     private void Start()
     {
@@ -39,6 +51,32 @@ public class PlateauBeweger : MonoBehaviour
         }
         routine = GoTowardsTarget(target);
         StartCoroutine(routine);
+    }
+
+    private void FixedUpdate()
+    {
+        /*if (holdTimer > 0f)
+        {
+            holdTimer -= Time.fixedDeltaTime;
+            return;
+        }
+
+        timer += Time.fixedDeltaTime;
+        float t = Mathf.Clamp01(timer / timeToReach);
+        t = t * t * (3f - 2f * t); // smoothstep
+
+        Vector3 from = toPos2 ? position1 : position2;
+        Vector3 to = toPos2 ? position2 : position1;
+
+        Vector3 next = Vector3.Lerp(from, to, t);
+        rb.MovePosition(next);
+
+        if (timer >= timeToReach)
+        {
+            timer = 0f;
+            toPos2 = !toPos2;
+            holdTimer = hold;
+        }*/
     }
 
     private IEnumerator GoTowardsTarget(Vector3 target)

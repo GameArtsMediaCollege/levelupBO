@@ -20,6 +20,15 @@ public class PlayerStateMachine : MonoBehaviour
     Vector3 appliedMovement;
     Vector3 cameraRelativeMovement;
 
+    // --- Moving platform support (delta meenemen) ---
+    private Transform currentPlatform;
+    private Vector3 lastPlatformPos;
+    private Vector3 accumulatedPlatformDelta;
+
+    [SerializeField] private float platformStickDown = 2.0f;   // extra naar beneden om contact te houden
+    [SerializeField] private float platformMaxStep = 1.0f;      // safety clamp per frame (optioneel)
+
+
     //movement varuiables
     bool isMovementPressed;
     bool isRunPressed;
@@ -37,7 +46,7 @@ public class PlayerStateMachine : MonoBehaviour
     [SerializeField] private float fallMultiplier = 2.0f;
     //gravity
     float gravity = -9.8f;
-    float groundedgravity = -0.5f;
+    float groundedgravity = -2f;
 
     //jump variables
     bool isJumpedPressed = false;
@@ -146,11 +155,31 @@ public class PlayerStateMachine : MonoBehaviour
 
     void Update()
     {
+        // 1) states + rotatie (zoals jij al deed)
         handleRotation();
         CurrentState.UpdateStates();
+
+        // 2) Jouw bestaande movement: appliedMovement -> camera relative
         cameraRelativeMovement = ConvertToCameraSpace(appliedMovement);
+
+        // 4) Totale beweging in 1 Move call
         charactercontroller.Move(cameraRelativeMovement * Time.deltaTime);
+
+        // 6) Als we écht los zijn: platform loslaten
+        if (!charactercontroller.isGrounded)
+        {
+            // je kunt dit strenger/soepeler maken met een grace timer,
+            // maar dit is de simpele versie
+            currentPlatform = null;
+            accumulatedPlatformDelta = Vector3.zero;
+        }
     }
+
+
+
+
+
+
 
     Vector3 ConvertToCameraSpace(Vector3 vectorToRotate)
     {
@@ -209,6 +238,24 @@ public class PlayerStateMachine : MonoBehaviour
         {
             Quaternion targetRotation = Quaternion.LookRotation(positionToLookAt);
             transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, rotationFactorPerFrame);
+        }
+    }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        // Alleen als we echt "bovenop" iets staan
+        if (hit.moveDirection.y < -0.5f)
+        {
+            if(hit.transform.tag == "MovingPlatform")
+            {
+                Debug.Log("Jammo is op een platform");
+                if (currentPlatform != hit.transform)
+                {
+                    currentPlatform = hit.transform;
+                    lastPlatformPos = currentPlatform.position;
+                    accumulatedPlatformDelta = Vector3.zero;
+                }
+            }
         }
     }
 
