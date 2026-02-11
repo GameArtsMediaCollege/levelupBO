@@ -73,7 +73,7 @@ public class Collectible : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.tag == "Jammo")
         {
             if(particlesActive)
             {

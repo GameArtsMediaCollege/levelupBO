@@ -34,11 +34,15 @@ public class LevelEndPoint : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.tag == "Jammo")
         {
             if(particles != null) 
             {
                 particles.Play();
+            }
+            if(audiosource != null)
+            {
+                audiosource.Play();
             }
             Debug.Log("finished level");
         }

@@ -20,13 +20,9 @@ public class PlayerStateMachine : MonoBehaviour
     Vector3 appliedMovement;
     Vector3 cameraRelativeMovement;
 
-    // --- Moving platform support (delta meenemen) ---
-    private Transform currentPlatform;
-    private Vector3 lastPlatformPos;
-    private Vector3 accumulatedPlatformDelta;
-
-    [SerializeField] private float platformStickDown = 2.0f;   // extra naar beneden om contact te houden
-    [SerializeField] private float platformMaxStep = 1.0f;      // safety clamp per frame (optioneel)
+    //moving platofrm variables
+    ControllerColliderHit previousplatform;
+    ControllerColliderHit curplatform;
 
 
     //movement varuiables
@@ -109,7 +105,7 @@ public class PlayerStateMachine : MonoBehaviour
     {
         animator = GetComponentInChildren<Animator>();
         playerinput = new JammoInput();
-        charactercontroller = GetComponent<CharacterController>();
+        charactercontroller = GetComponentInChildren<CharacterController>();
 
         isWalkingHash = Animator.StringToHash("isWalking");
         isFallingHash = Animator.StringToHash("isFalling");
@@ -164,15 +160,6 @@ public class PlayerStateMachine : MonoBehaviour
 
         // 4) Totale beweging in 1 Move call
         charactercontroller.Move(cameraRelativeMovement * Time.deltaTime);
-
-        // 6) Als we écht los zijn: platform loslaten
-        if (!charactercontroller.isGrounded)
-        {
-            // je kunt dit strenger/soepeler maken met een grace timer,
-            // maar dit is de simpele versie
-            currentPlatform = null;
-            accumulatedPlatformDelta = Vector3.zero;
-        }
     }
 
 
@@ -227,17 +214,16 @@ public class PlayerStateMachine : MonoBehaviour
     void handleRotation()
     {
         Vector3 positionToLookAt;
-        //this is the location we are going toward but without the y axis
         positionToLookAt.x = cameraRelativeMovement.x;
         positionToLookAt.y = 0.0f;
         positionToLookAt.z = cameraRelativeMovement.z;
 
-        Quaternion currentRotation = transform.rotation;
+        Quaternion currentRotation = charactercontroller.transform.rotation;
 
         if (isMovementPressed)
         {
             Quaternion targetRotation = Quaternion.LookRotation(positionToLookAt);
-            transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, rotationFactorPerFrame);
+            charactercontroller.transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, rotationFactorPerFrame);
         }
     }
 
@@ -248,13 +234,15 @@ public class PlayerStateMachine : MonoBehaviour
         {
             if(hit.transform.tag == "MovingPlatform")
             {
-                Debug.Log("Jammo is op een platform");
-                if (currentPlatform != hit.transform)
+                if(hit != previousplatform)
                 {
-                    currentPlatform = hit.transform;
-                    lastPlatformPos = currentPlatform.position;
-                    accumulatedPlatformDelta = Vector3.zero;
+                    charactercontroller.transform.SetParent(hit.transform);
+                    previousplatform = hit;
                 }
+            }
+            else
+            {
+                charactercontroller.transform.SetParent(null);
             }
         }
     }

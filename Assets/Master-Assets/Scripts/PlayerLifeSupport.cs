@@ -16,8 +16,8 @@ public class PlayerLifeSupport : MonoBehaviour
 
     private void CheckforSpawn()
     {
-        spawnpoints = FindObjectsOfType<LevelSpawnPoint>();
-        if(spawnpoints.Length > 0 )
+        spawnpoints = FindObjectsByType<LevelSpawnPoint>(FindObjectsSortMode.None);
+        if (spawnpoints.Length > 0 )
         {
             currspawnpoint = spawnpoints[0].transform.position + new Vector3(0, 2, 0); 
         }

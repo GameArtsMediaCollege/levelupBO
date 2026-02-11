@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class PlateauBeweger : MonoBehaviour
 {
-    [SerializeField] private BoxCollider collider;
     [SerializeField] public Vector3 stablescale;
     [SerializeField] public Vector3 position1;
     [SerializeField] public Vector3 position2;
@@ -16,15 +15,8 @@ public class PlateauBeweger : MonoBehaviour
     private bool switching;
     private Vector3 target;
 
-    private Rigidbody rb;
-    private float timer;
-    private bool toPos2 = true;
-    private float holdTimer;
-
     private void Awake()
     {
-        rb = GetComponent<Rigidbody>();
-        rb.isKinematic = true;
     }
 
     private void Start()

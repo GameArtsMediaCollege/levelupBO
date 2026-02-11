@@ -27,14 +27,20 @@ public class PlateauDrager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        other.transform.SetParent(transform);
-        Debug.Log("parent is set");
+        if (other.transform.tag == "Jammo")
+        {
+            other.transform.SetParent(transform);
+            Debug.Log("parent is set");
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        other.transform.SetParent(null);
-        Debug.Log("parent is let go");
+        if (other.transform.tag == "Jammo")
+        {
+            other.transform.SetParent(null);
+            Debug.Log("parent is let go");
+        }
     }
 
 

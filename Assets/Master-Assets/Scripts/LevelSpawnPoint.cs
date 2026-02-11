@@ -23,11 +23,14 @@ public class LevelSpawnPoint : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player" && particlespresent)
+        if (other.tag == "Jammo")
         {
             playerlife.currspawnpoint = this.transform.position + new Vector3(0, 2,0);
-            particles.Play();
-            Debug.Log("checkpoint is gezet");
+            if (particlespresent)
+            {
+                particles.Play();
+            }
+                Debug.Log("checkpoint is gezet");
         }
     }
 }
