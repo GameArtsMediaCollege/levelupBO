@@ -9,7 +9,7 @@ public class LevelSpawnPoint : MonoBehaviour
     private bool particlespresent;
     void Start()
     {
-        playerlife = FindObjectOfType<PlayerLifeSupport>();
+        playerlife = FindFirstObjectByType<PlayerLifeSupport>();
         particles = GetComponentInChildren<ParticleSystem>();  
         if(particles == null)
         {

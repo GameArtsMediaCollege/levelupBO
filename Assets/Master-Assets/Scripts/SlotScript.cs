@@ -10,9 +10,11 @@ public class SlotScript : MonoBehaviour
 {
     public bool BrengSleutelsNaarHetSlot;
     private bool readyforanimation;
+    private bool uiPresent;
 
-    Animator animator;
+    public Animator animator;
     private Collider col;
+    public UiSettings uisettings;
     public List<SleutelCollectible> sleutel_collectibles;
     private SleutelCollectible[] sleutel_collectibles_full;
 
@@ -49,6 +51,16 @@ public class SlotScript : MonoBehaviour
                 sleutel_collectibles_full[i] = sleutel_collectibles[i];
             }
         }
+        uisettings = FindFirstObjectByType<UiSettings>();
+        if(uisettings == null)
+        {
+            Debug.LogWarning("er is geen UiSettings script gevonden in de scene. zorg ervoor dat je een UiSettings script toevoegt als je de coin teller wilt gebruiken");
+        }
+        else
+        {
+            uisettings.SetupKeys(sleutel_collectibles.Count);
+            uiPresent = true;
+        }
     }
 
     public void Collected(SleutelCollectible sleutel)
@@ -59,6 +71,7 @@ public class SlotScript : MonoBehaviour
             {
                 Debug.Log("sleutel nummer" + sleutel_collectibles[i] + "is gevonden");
                 sleutel_collectibles.Remove(sleutel_collectibles[i]);
+                uisettings.AddKey();
                 CheckSlotList();
             }
         }

@@ -6,25 +6,27 @@ using UnityEngine;
 public class Collectible : MonoBehaviour
 {
     private AudioSource audiosource;
-
+    private CoinCollector coincollector;
     private float xas;
     private float yas;
     private float zas;
-    public float speed;
-    public bool xaxis;
-    public bool yaxis;
-    public bool zaxis;
-
+    [SerializeField] private float speed;
+    [SerializeField] private bool xaxis = false;
+    [SerializeField] private bool yaxis = false;
+    [SerializeField] private bool zaxis = false;
+        
     public float amplitude = 0.2f;
     public float frequency = 0f;
     Vector3 posOffset = new Vector3();
     Vector3 tempPos = new Vector3();
 
-    public GameObject particlesobject;
+    public ParticleSystem particlesobject;
     private bool particlesActive;
 
     void Start()
     {
+        coincollector = FindFirstObjectByType<CoinCollector>();
+        particlesobject = FindFirstObjectByType<ParticleSystem>();
         audiosource = GetComponentInChildren<AudioSource>();  
         if (particlesobject == null)
         {
@@ -34,7 +36,6 @@ public class Collectible : MonoBehaviour
         else
         {
             particlesActive = true;
-            particlesobject.SetActive(false);
         }
 
         posOffset = transform.position;
@@ -78,7 +79,7 @@ public class Collectible : MonoBehaviour
             if(particlesActive)
             {
                 particlesobject.transform.SetParent(null);
-                particlesobject.SetActive(true);
+                particlesobject.Play();
                 audiosource.Play();
             }
             Destroy(this.gameObject);
