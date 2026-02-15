@@ -8,7 +8,7 @@ public class UiSettings : MonoBehaviour
     public KeySlot[] keyslot;
     public GameObject keyslotobject;
     public GameObject keyslotparent;
-
+    public int currentkeyslot = 0;
 
     void Start()
     {
@@ -23,7 +23,9 @@ public class UiSettings : MonoBehaviour
 
     public void AddKey()
     {
-
+        Debug.Log("vertel de stomme keyslot dat hij iets moet gaan doen");
+        keyslot[currentkeyslot].FilledIn();
+        currentkeyslot++;
     }
 
     public void SetupKeys(int count)

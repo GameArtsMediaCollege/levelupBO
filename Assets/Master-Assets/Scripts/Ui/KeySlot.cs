@@ -6,17 +6,13 @@ public class KeySlot : MonoBehaviour
 
     void Start()
     {
-        
+        filledsprite.SetActive(false);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void FilledIn()
     {
+        Debug.Log("keyslot filled in");
         filledsprite.SetActive(true);
     }
 }

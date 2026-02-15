@@ -60,6 +60,7 @@ public class SleutelCollectible : MonoBehaviour
 
     private IEnumerator followplayer(Transform player)
     {
+        slotscript.Collected(this);
         connected = true;
         while (unlocked == false)
         {
@@ -76,7 +77,7 @@ public class SleutelCollectible : MonoBehaviour
 
         Vector3 currentsize = transform.localScale;
         float timeElapsed = 0;
-        float lerpDuration = 1f;
+        float lerpDuration = 0.5f;
         while (timeElapsed < lerpDuration)
         {
             transform.localScale = Vector3.Lerp(currentsize, Vector3.zero, timeElapsed / lerpDuration);
@@ -89,11 +90,10 @@ public class SleutelCollectible : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Player")
+        if(other.tag == "Jammo")
         {
             if(slotscript != null)
             {
-                slotscript.Collected(this);
                 StartCoroutine(followplayer(other.transform));
             }
             else

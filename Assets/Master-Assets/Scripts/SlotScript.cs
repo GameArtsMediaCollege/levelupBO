@@ -14,7 +14,7 @@ public class SlotScript : MonoBehaviour
 
     public Animator animator;
     private Collider col;
-    public UiSettings uisettings;
+    private UiSettings uisettings;
     public List<SleutelCollectible> sleutel_collectibles;
     private SleutelCollectible[] sleutel_collectibles_full;
 
@@ -70,8 +70,8 @@ public class SlotScript : MonoBehaviour
             if(sleutel == sleutel_collectibles[i])
             {
                 Debug.Log("sleutel nummer" + sleutel_collectibles[i] + "is gevonden");
-                sleutel_collectibles.Remove(sleutel_collectibles[i]);
                 uisettings.AddKey();
+                sleutel_collectibles.Remove(sleutel_collectibles[i]);
                 CheckSlotList();
             }
         }
@@ -112,7 +112,7 @@ public class SlotScript : MonoBehaviour
     {
         if (BrengSleutelsNaarHetSlot && readyforanimation)
         {
-            if(other.tag == "Player")
+            if(other.tag == "Jammo")
             {
                 AllkeysCollected();
             }
