@@ -45,7 +45,6 @@ public class PlayerStateMachine : MonoBehaviour
     float groundedgravity = -2f;
 
     //jump variables
-    bool isJumpedPressed = false;
     float initialJumpVelocity;
     [Range(1.0f, 25.0f)]
     [SerializeField] float maxJumpHeight = 10f;

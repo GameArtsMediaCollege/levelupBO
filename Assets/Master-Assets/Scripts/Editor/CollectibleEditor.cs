@@ -6,20 +6,32 @@ using UnityEngine;
 [CustomEditor(typeof(Collectible))]
 public class CollectibleEditor : Editor
 {
-    private bool clicked;
-    private bool rotclicked = true;
-    private bool floatclicked = true;
+    bool showAdvanced = false;
+    bool showMocement = false;
+    bool clicked;
 
-    private bool xaxis;
-    private bool yaxis;
-    private bool zaxis;
-    private float speed;
-    private float amplitude;
-    private float frequency;
+    SerializedProperty speedProp;
+    SerializedProperty xaxis;
+    SerializedProperty yaxis;
+    SerializedProperty zaxis;
+    SerializedProperty amplitude;
+    SerializedProperty frequency;
+
+    void OnEnable()
+    {
+        speedProp = serializedObject.FindProperty("speed");
+        xaxis = serializedObject.FindProperty("xaxis");
+        yaxis = serializedObject.FindProperty("yaxis");
+        zaxis = serializedObject.FindProperty("zaxis");
+        amplitude = serializedObject.FindProperty("amplitude");
+        frequency = serializedObject.FindProperty("frequency");
+    }
 
     public override void OnInspectorGUI()
     {
         Collectible collectible = (Collectible)target;
+        serializedObject.Update();
+
 
         if (GUILayout.Button("uitleg"))
         {
@@ -37,50 +49,32 @@ public class CollectibleEditor : Editor
             EditorGUILayout.HelpBox("Dit script bestuurt het opraapbare object. \nWanneer de speler binnen de collider loopt, dan zal dit script een particle effect afspelen en het object verwijderen. \nJe kunt de collectible laten draaien met de volgende rotatie knoppen en de snelheid", MessageType.Info);
         }
 
-        if(GUILayout.Button("rotatie knoppen")) 
+        // Toggle knop
+        if (GUILayout.Button("Collectible Draaien"))
         {
-            if (rotclicked)
-                rotclicked = false;
-            else
-                rotclicked = true;
+            showAdvanced = !showAdvanced;
         }
 
-        EditorGUI.BeginChangeCheck();
-        if (rotclicked)
+        // Alleen tonen wanneer knop actief is
+        if (showAdvanced)
         {
-            EditorGUILayout.LabelField("collectible laten draaien");
-            xaxis = EditorGUILayout.Toggle("x_rotatie", collectible.xaxis);
-            yaxis = EditorGUILayout.Toggle("y_rotatie", collectible.yaxis);
-            zaxis = EditorGUILayout.Toggle("z_rotatie", collectible.zaxis);
-            speed = EditorGUILayout.Slider("draaisnelheid", collectible.speed, 1, 50);
-
+            EditorGUILayout.LabelField("Advanced Settings", EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(xaxis);
+            EditorGUILayout.PropertyField(yaxis);
+            EditorGUILayout.PropertyField(zaxis);
+            speedProp.floatValue = EditorGUILayout.Slider("Draaisnelheid", speedProp.floatValue, 1f, 100f);
         }
 
-        if (GUILayout.Button("beweeg knoppen"))
+        if (GUILayout.Button("Collectible Bewegen"))
         {
-            if (floatclicked)
-                floatclicked = false;
-            else
-                floatclicked = true;
+            showMocement = !showMocement;
+        }
+        if (showMocement)
+        {
+            amplitude.floatValue = EditorGUILayout.Slider("Amplitude", amplitude.floatValue, 0.1f, 2f);
+            frequency.floatValue = EditorGUILayout.Slider("Frequentie", frequency.floatValue, 0.1f, 5f);
         }
 
-
-        if (floatclicked)
-        {
-            EditorGUILayout.LabelField("collectible op en neer bewegen");
-            amplitude = EditorGUILayout.Slider("afstand", collectible.amplitude, 0, 10);
-            frequency = EditorGUILayout.Slider("snelheid", collectible.frequency, 0, 10);
-        }
-
-        if (EditorGUI.EndChangeCheck())
-        {
-            Undo.RecordObject(target, "Changed Area Of Effect");
-            collectible.xaxis = xaxis;
-            collectible.yaxis = yaxis;
-            collectible.zaxis = zaxis;
-            collectible.speed = speed;
-            collectible.amplitude = amplitude;
-            collectible.frequency = frequency;  
-        }
+        serializedObject.ApplyModifiedProperties();
     }
 }
