@@ -10,6 +10,7 @@ public class SlotScript : MonoBehaviour
     public bool BrengSleutelsNaarHetSlot;
     private bool readyforanimation;
     private bool uiPresent;
+    private AudioSource audiosource;
 
 
     public Animator animator;
@@ -108,6 +109,7 @@ public class SlotScript : MonoBehaviour
     private void AllkeysCollected()
     {
         animator.enabled = true;
+       // audiosource.Play();
         DestroyKeys();
         Debug.Log("slot is geopend");
     }
