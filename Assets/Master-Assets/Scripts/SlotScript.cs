@@ -40,7 +40,7 @@ public class SlotScript : MonoBehaviour
         {
             Debug.LogError("zorg ervoor dat de collider van dit object wordt gebruikt als een trigger door op de knop 'isTrigger' te drukken");
         }
-        animator = GetComponentInChildren<Animator>();
+        //animator = GetComponentInChildren<Animator>();
         if(animator == null)
         {
             Debug.LogError("je hebt een animator component nodig om dit slotscript te laten werken. je moet dit component op dit object toeveogen om te werken");
