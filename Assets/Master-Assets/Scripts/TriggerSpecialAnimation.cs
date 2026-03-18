@@ -1,27 +1,34 @@
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 [RequireComponent(typeof(SphereCollider))]
 [RequireComponent(typeof(AudioSource))]
-public class TriggerAnimation : MonoBehaviour
+
+public class TriggerSpecialAnimation : MonoBehaviour
 {
     public List<Animator> animatorslist;
+    public string animatorBoolean;
     private AudioSource audiosource;
-    private bool triggered; 
+    private bool triggered;
     void Start()
     {
-        if(animatorslist.Count > 0)
+        if (animatorslist.Count > 0)
         {
-            for (int i = 0; i < animatorslist.Count; i++)
-            {
-                animatorslist[i].enabled = false;
-            }
+
+        }
+        else
+        {
+            Debug.Log("geen animators toegevoegd aan dit object. er zal niks gebeuren");
         }
         audiosource = GetComponent<AudioSource>();
-        if(audiosource == null )
+        if (audiosource == null)
         {
             Debug.Log("geen audio gevonden voor de trigger. de trigger zal geen audio afspelen");
+        }
+        if (animatorBoolean == "")
+        {
+            Debug.Log("er is geen boolean aangetroffen in de animator controller");
         }
     }
 
@@ -40,13 +47,13 @@ public class TriggerAnimation : MonoBehaviour
     {
         for (int i = 0; i < animatorslist.Count; i++)
         {
-            animatorslist[i].enabled = true;
+            animatorslist[i].SetBool(animatorBoolean, true);
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Jammo")
+        if (other.tag == "Jammo")
         {
             if (!triggered)
             {
