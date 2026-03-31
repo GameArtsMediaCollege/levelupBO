@@ -2,22 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
-
-
-
+ 
+ 
 [RequireComponent(typeof(Collider))]
 public class SlotScript : MonoBehaviour
 {
     public bool BrengSleutelsNaarHetSlot;
     private bool readyforanimation;
     private bool uiPresent;
-
+    private AudioSource audiosource;
+ 
+ 
     public Animator animator;
     private Collider col;
     private UiSettings uisettings;
     public List<SleutelCollectible> sleutel_collectibles;
     private SleutelCollectible[] sleutel_collectibles_full;
-
+ 
+ 
+    [Header("Gizmo Settings")]
+    [SerializeField, HideInInspector] public Color gizmoColor = Color.yellow;
+    [SerializeField, HideInInspector] public float gizmoSize = 0.5f;
+    [SerializeField, HideInInspector] public float iconAlpha = 0.5f;
+    [SerializeField, HideInInspector] public float iconSize = 0.5f;
+    [Range(0f, 1f), HideInInspector] public float emptyWarningAlpha = 0.35f;
+    [SerializeField, HideInInspector] public float emptyWarningIconSize = 40f;
+    [SerializeField, HideInInspector] public float emptyWarningHeight = 1.6f;
+ 
     void Awake()
     {
         col = GetComponent<Collider>();
@@ -58,11 +69,10 @@ public class SlotScript : MonoBehaviour
         }
         else
         {
-            uisettings.SetupKeys(sleutel_collectibles.Count);
             uiPresent = true;
         }
     }
-
+ 
     public void Collected(SleutelCollectible sleutel)
     {
         for (int i = 0; i < sleutel_collectibles.Count; i++)
@@ -70,13 +80,16 @@ public class SlotScript : MonoBehaviour
             if(sleutel == sleutel_collectibles[i])
             {
                 Debug.Log("sleutel nummer" + sleutel_collectibles[i] + "is gevonden");
-                uisettings.AddKey();
                 sleutel_collectibles.Remove(sleutel_collectibles[i]);
                 CheckSlotList();
+                if(uiPresent)
+                {
+                    uisettings.AddKey();
+                }
             }
         }
     }
-
+ 
     private void CheckSlotList()
     {
         if(sleutel_collectibles.Count == 0)
@@ -92,14 +105,15 @@ public class SlotScript : MonoBehaviour
             Debug.Log("nog " + sleutel_collectibles.Count + " te verzamelen om het slot te openen");
         }
     }
-
+ 
     private void AllkeysCollected()
     {
         animator.enabled = true;
+       // audiosource.Play();
         DestroyKeys();
         Debug.Log("slot is geopend");
     }
-
+ 
     private void DestroyKeys()
     {
         for (int i = 0; i < sleutel_collectibles_full.Length; i++)
@@ -107,7 +121,7 @@ public class SlotScript : MonoBehaviour
             sleutel_collectibles_full[i].unlocked = true;
         }
     }
-
+ 
     private void OnTriggerEnter(Collider other)
     {
         if (BrengSleutelsNaarHetSlot && readyforanimation)
